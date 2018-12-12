@@ -1,0 +1,29 @@
+language: go
+go:
+- 1.10.x
+- 1.11.x
+- tip
+branches:
+  only:
+  - master
+cache:
+  directories:
+  - "$GOCACHE"
+  - "$GOPATH"
+  - "$GOPATH/pkg/mod"
+  - "$GOPATH/github.com/golang"
+  - "$GOPATH/gopkg.in/alecthomas"
+install:
+- env GO111MODULE=on go install . ./cmd/...
+- env GO111MODULE=off go get -u github.com/alecthomas/gometalinter
+- env GO111MODULE=off gometalinter --install
+- env GO111MODULE=off go get -u github.com/go-task/task/cmd/task
+- go get -t ./...
+script:
+- export PATH=$PATH:$HOME/gopath/bin
+- env GO111MODULE=on task ci
+notifications:
+  slack:
+    on_success: always
+    rooms:
+      secure: MP9xfCh/2dLz9niooepj2XNqvaHrWGLwgfNUp2n2u+L2XRO2wnk8/jtj/cfKIbwlj9ePAt5rmX/fgcN6izQC54vXvxRLjBpcQOt+mma85lVditGqbzNWKLWCZmiA8duCUnuIrdtm9ni8t2vhVhbD7K9oBkGnaOKgyPiBvRicpeK9BJ5e7y++G9zDJ2kGjF2IXeG06X5cRrKbURj7DR2Cm9c+wqXn20GOwNf1nVFYLq/D6h5A5v2SAfEe2t+xkYbkDdDKEiCe1yS2q0V5nIX/8mJ+Qmhdg2JqVcU+tQNJ5zzVopqFE+0xBv9o4OvVmQKTlf4rJ02ZA0W7SXBvWUbKzQJOkIMUqi53WE4+VfTdCI+YH0tiXCEfFMDEfe5zbdgEUpiBzlEXeuYkKIsaSPnmJjjEl/tP9KtFSevelnwAerxSvue3r6M0Qc+KYEa6C+mG/XBhSjVjh0BSchoHUJxOX0hHEvRkcGGU7kyrZLYG9ClxqhdVBT7qJ+FCaooy+C9F7vKt2sX87F4QyGbDDsu4MM6tpNeKPjUGy0kr1E7AZ8bRUbx03gtIMad8zMhB9ezFVkJMt6y/4oFvqtM/pVdXBdygB0bZBqQZ7kI2xrOpQVQyESCtIRJNait5Uc5kbwD7cKabP4CHnSOGNNsMhEwJnQkRmI8+zcDInDJCq3FhABY=

@@ -1,0 +1,44 @@
+version: '2'
+
+tasks:
+  default:
+    cmds:
+      - task: test
+
+  install:
+    desc: Install all dependencies.
+    cmds:
+      - echo "Installing Dependencies ..."
+      - go get -u github.com/alecthomas/gometalinter
+
+  test:
+    desc: Run all the go tests.
+    cmds:
+      - go test -v -race ./...
+
+  benchmark:
+    desc: Benchmark the cache.
+    cmds:
+      - go test -bench=.
+
+  cov:
+    desc: Generate test converage.
+    cmds:
+      - go test -v -cover -coverprofile=c.out
+      - go tool cover -html=c.out -o coverage.html
+
+  vet:
+    desc: Reports suspicious code.
+    cmds:
+      - go vet ./...
+
+  lint:
+    desc: Run all the linters.
+    cmds:
+      - gometalinter --disable-all --enable=vet --enable=vetshadow ./...
+
+  ci:
+    desc: Run it like Volkswagen.
+    cmds:
+      - task: test
+      - task: lint
